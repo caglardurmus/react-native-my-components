@@ -1,0 +1,103 @@
+import React, {Component} from 'react';
+import {
+    StyleSheet,
+    TouchableOpacity,
+    LayoutAnimation,
+    UIManager,
+} from 'react-native';
+import {View} from 'native-base';
+import {Colors} from '../../components/themes/Colors';
+import {CustomText} from "../../components/text/CustomText";
+import {getValue} from "../../helpers/ValueHelper";
+
+if (
+    Platform.OS === 'android' &&
+    UIManager.setLayoutAnimationEnabledExperimental
+) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
+export default class Switch extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            switchState: 0
+        }
+    }
+
+    toggleSwitch = (switchState) => {
+        this.setState({switchState})
+        LayoutAnimation.configureNext(
+            LayoutAnimation.create(
+                200,
+                LayoutAnimation.Types.linear,
+                LayoutAnimation.Properties.scaleXY
+            )
+        );
+    }
+
+
+    render() {
+        return (
+            <View style={{marginHorizontal: getValue(20)}}>
+                <View style={styles.switchContainer}>
+                    <View style={[
+                        styles.switchEffectContainer,
+                        this.state.switchState == 0 ? {left: getValue(10)} : {right: getValue(10)}
+                    ]}/>
+                    <TouchableOpacity
+                        onPress={() => this.toggleSwitch(0)}
+                        style={styles.switchItem}>
+                        <CustomText header
+                                    style={{
+                                        ...styles.switchItemText,
+                                        color: this.state.switchState === 0 ? '#fff' : Colors.green_2
+                                    }}>Randevu
+                            Al</CustomText>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => this.toggleSwitch(1)}
+                        style={styles.switchItem}>
+                        <CustomText header
+                                    style={{
+                                        ...styles.switchItemText,
+                                        color: this.state.switchState === 1 ? '#fff' : Colors.green_2
+                                    }}
+                        >Online Görüşme</CustomText>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+
+    }
+}
+
+const styles = StyleSheet.create({
+    switchContainer: {
+        marginTop: getValue(10),
+        borderRadius: getValue(10),
+        backgroundColor: Colors.green_3,
+        width: '100%',
+        flexDirection: 'row',
+        padding: getValue(5),
+        alignItems: 'center'
+    },
+    switchEffectContainer: {
+        position: 'absolute',
+        backgroundColor: Colors.green_4,
+        height: '90%',
+        width: '49%',
+        borderRadius: getValue(10),
+        zIndex: 0
+    },
+    switchItem: {
+        flex: 1,
+        alignItems: 'center',
+        paddingVertical: getValue(10),
+    },
+    switchItemText: {
+        fontSize: getValue(20),
+        color: '#fff',
+        fontWeight: 'bold'
+    }
+})
